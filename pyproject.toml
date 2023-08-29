@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phrasewood"
+version = "1.0.0"
+authors = [
+    { name="David Mays", email="maysidavid@gmail.com" },
+]
+description = "A robust Python library for creating text-based video games."
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/dimays/phrasewood"
+"Bug Tracker" = "https://github.com/dimays/phrasewood/issues"
