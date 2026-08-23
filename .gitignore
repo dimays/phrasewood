@@ -1,20 +1,68 @@
-# Python
+# ---- Python ----
 __pycache__/
 *.py[cod]
+*$py.class
+*.egg
 *.egg-info/
 .eggs/
+*.pyc
+
+# ---- Testing & coverage ----
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+
+# ---- Type checkers & linters ----
+.mypy_cache/
+.ruff_cache/
+.pyright/
+.dmypy.json
+
+# ---- Build & packaging ----
 build/
 dist/
+wheels/
+*.whl
+pip-wheel-metadata/
 
-# Environments & tooling
+# ---- Virtual environments ----
 .venv/
+venv/
+env/
 .env
-.ruff_cache/
-.pytest_cache/
-.mypy_cache/
+.env.*
+!.env.example
 
-# OS / editor
-.DS_Store
-*.swp
+# ---- Node / JavaScript (future browser runtime & player) ----
+node_modules/
+.npm/
+.pnpm-store/
+*.tsbuildinfo
+.next/
+.turbo/
+.parcel-cache/
+
+# ---- Editors & IDEs ----
 .idea/
 .vscode/
+*.swp
+*.swo
+*~
+.claude/
+
+# ---- OS ----
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+desktop.ini
+
+# ---- Logs & scratch ----
+*.log
+scratch/
+tmp/
