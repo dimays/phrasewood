@@ -10,6 +10,38 @@ The design vocabulary is fixed in ``DECISIONS.md``; the (draft) on-disk project
 format lives in ``docs/pwood-format.md``.
 """
 
+from phrasewood.core import (
+    BoolType,
+    EnumType,
+    Feature,
+    FeatureType,
+    IntType,
+    TextType,
+)
+from phrasewood.errors import (
+    DuplicateFeature,
+    FeatureValueError,
+    PhrasewoodError,
+    UnknownFeature,
+)
+from phrasewood.state import World
+
 __version__ = "0.0.1"
 
-__all__ = ["__version__"]
+__all__ = [
+    "__version__",
+    # features
+    "Feature",
+    "FeatureType",
+    "IntType",
+    "BoolType",
+    "TextType",
+    "EnumType",
+    # state
+    "World",
+    # errors
+    "PhrasewoodError",
+    "FeatureValueError",
+    "UnknownFeature",
+    "DuplicateFeature",
+]
