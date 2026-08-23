@@ -32,6 +32,33 @@ The whole model is a handful of primitives:
 Instead of drawing arrows between passages, you write buds and declare *when*
 each can bloom. The reachable map emerges from those rules — so it scales.
 
+## Why buds, not branches
+
+Phrasewood did not invent this model. "Buds" is our name for **storylets**, part
+of a design tradition usually called **quality-based narrative (QBN)**. Credit
+belongs to the people who pioneered and mapped it:
+
+- **[Failbetter Games](https://www.failbetter.com/)**, who built QBN into
+  *[Fallen London](https://www.fallenlondon.com/)* (2009) and opened it to
+  authors through their **StoryNexus** tool — the practical origin of storylets
+  as most people know them.
+- **[Emily Short](https://emshort.blog/)**, whose writing on quality-based,
+  salience-based, and waypoint narrative structures is the clearest analysis of
+  how and why these systems work.
+- **Max Kreminski & Noah Wardrip-Fruin**, whose paper *"Sketching a Map of the
+  Storylets Design Space"* (2018) gave the idea a shared vocabulary.
+
+**Why we build on it instead of simple branching (the Twine model):** a branching
+tree grows combinatorially — every meaningful choice multiplies the paths an
+author must hand-wire and keep straight, and state management becomes unwieldy
+as a story grows (the wall most Twine authors eventually hit). Storylets invert
+the relationship: content is *decoupled* from a fixed graph. Each bud carries its
+own conditions, so what's available is **computed from the world's state** rather
+than wired by hand. Authors add moments locally without touching a web of global
+links; stories stay maintainable at scale and can become systemic, emergent, and
+deeply reactive. That scalability is the whole reason the model is worth adopting
+— and worth giving good, joyful tooling.
+
 ## Install
 
 Requires Python 3.10+. While it's pre-release, install from source:

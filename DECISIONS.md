@@ -41,6 +41,12 @@ classic Twine wall). If availability is *computed* from declared requirements,
 authors add moments without managing a combinatorial web of links, and the story
 scales.
 
+*Prior art (we didn't invent this):* quality-based narrative / storylets, from
+Failbetter Games (*Fallen London*, StoryNexus), analyzed by Emily Short, and
+formalized by Kreminski & Wardrip-Fruin, *"Sketching a Map of the Storylets
+Design Space"* (2018). See the README for links. "Bud" is our name for a
+storylet.
+
 ## What removes the ceiling — **Locked**
 
 The pressure valve for "I need to do something the primitives don't cover" is the
