@@ -13,9 +13,9 @@ One small, consistent lexicon, drawn from the "wood of phrases" the name hints a
 
 | Term         | Meaning |
 | ------------ | ------- |
-| **quality**  | a typed variable holding world state (inventory, skills, relationships, progress) |
+| **feature**  | a typed variable holding world state (inventory, skills, relationships, progress) |
 | **bud**      | the atomic unit of story; *blooms* when the current state satisfies its requirements |
-| **entity**   | a thing, person, or place that carries its own qualities |
+| **entity**   | a thing, person, or place that carries its own features |
 | **tree**     | a single story / game |
 | **grove**    | a collection of stories |
 | **sprig**    | a tiny, constrained game — a cutting bearing just a few buds |
@@ -28,12 +28,14 @@ Notes on why:
 - **bud** replaces the borrowed term "storylet." "leaf" was the first pick but its
   irregular plural (`leaves`) is a papercut in code; `buds` is clean, and "a bud
   blooms" is the exact verb we want for "becomes available."
+- **feature** replaces "quality" — the term of art in QBN. Same concept, but a
+  less ambiguous word with a cleaner regular plural (`features`, not `qualities`).
 - The primitives are deliberately few. Depth comes from *composition*, not from a
   large surface area.
 
 ## The systemic model, not branching — **Locked**
 
-The engine is built on **buds + qualities** (a quality-based / storylet model),
+The engine is built on **buds + features** (a quality-based / storylet model),
 not hand-wired branches. Branching is the trivial case of it.
 
 *Why:* branch-wiring is what makes large stories collapse into spaghetti (the
@@ -120,7 +122,7 @@ firmed up alongside the engine model (Phase 1) and its serializer (Phase 2).
 Each phase is many small, gated commits, and each ends on something playable.
 
 0. **Foundations** — repo, scaffold, this doc, a first-draft format spec. *(this phase)*
-1. **Engine core** — qualities, buds, entities, an expression layer, and a terminal player. `pip install phrasewood`, fully tested.
+1. **Engine core** — features, buds, entities, an expression layer, and a terminal player. `pip install phrasewood`, fully tested.
 2. **The `.pwood` format** — serialize/deserialize the model to the folder form and back; author a reference game by hand.
 3. **Play in the browser** — the TypeScript data runtime + a no-login web player; platform skeleton. *(separate repo)*
 4. **The Make studio** — the bud-centric visual builder, the computed map, a live playtest, and the first sprigs.

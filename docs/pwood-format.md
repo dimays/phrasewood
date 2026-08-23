@@ -17,7 +17,7 @@ form.
 ```
 the-lamplighters-debt/
 ├── pwood.toml            # manifest: what this tree is, and where it starts
-├── qualities.toml        # the world's state variables and their defaults
+├── features.toml        # the world's state variables and their defaults
 ├── entities/             # things, people, places (one file each)
 │   ├── ferryman.toml
 │   └── lantern.toml
@@ -31,12 +31,12 @@ A **sprig** (a tiny game) may collapse this to a single folder with just
 
 ## The model, in one paragraph
 
-The world is a bag of **qualities** (typed state). **Buds** are units of story
+The world is a bag of **features** (typed state). **Buds** are units of story
 that declare, via a `when` expression, the state under which they may **bloom**.
 At any moment the engine knows which buds are eligible; the player advances by
 taking a **choice** or typing a phrase that maps to an **action**, either of
 which applies **effects** (state changes) and may hand control to another bud via
-`goto`. **Entities** are named bundles of their own qualities that buds and
+`goto`. **Entities** are named bundles of their own features that buds and
 expressions can reach. That's the whole loop.
 
 ---
@@ -55,9 +55,9 @@ blurb = "The bridge is out, and the ferryman knows your name."
 start = "the-broken-bridge"    # id of the bud that blooms first
 ```
 
-## `qualities.toml` — the world's state
+## `features.toml` — the world's state
 
-Each entry declares one quality. Supported `type`s (v0): `int`, `bool`, `text`,
+Each entry declares one feature. Supported `type`s (v0): `int`, `bool`, `text`,
 `enum`.
 
 ```toml
@@ -87,11 +87,11 @@ name = "the ferryman"
 aliases = ["ferryman", "boatman", "him"]   # nouns the phrase line will accept
 description = "A hooded figure at the oars, patient as the tide."
 
-[qualities]                    # entity-local state, same shapes as above
+[features]                    # entity-local state, same shapes as above
 mood = { type = "enum", values = ["wary", "warm", "cold"], default = "wary" }
 ```
 
-Reference an entity's quality in expressions as `ferryman.mood`.
+Reference an entity's feature in expressions as `ferryman.mood`.
 
 ## `buds/*.md` — the story
 
@@ -144,7 +144,7 @@ the browser data runtime and the Python engine identically. This is the
 
 **Expressions** (`when`) evaluate to a boolean:
 
-- references: `quality_name`, `entity.quality`
+- references: `feature_name`, `entity.feature`
 - comparisons: `== != < <= > >=`
 - logic: `and`, `or`, `not`
 - arithmetic: `+ - * /`
@@ -154,9 +154,9 @@ the browser data runtime and the Python engine identically. This is the
 **Effects** (`do`) are a `;`-separated (or newline-separated) sequence of
 mutations:
 
-- `quality = <expr>`
-- `quality += <n>` / `quality -= <n>`
-- `entity.quality = <expr>`
+- `feature = <expr>`
+- `feature += <n>` / `feature -= <n>`
+- `entity.feature = <expr>`
 
 `goto` is a field, not an effect — it names the transition after effects apply.
 
@@ -164,7 +164,7 @@ mutations:
 
 ## The runtime loop (informative)
 
-1. **Load** the project → a `World`: qualities at their defaults, entities built,
+1. **Load** the project → a `World`: features at their defaults, entities built,
    buds indexed.
 2. **Bloom** the `start` bud (or, in open/systemic play, compute the set of
    eligible buds whose `when` holds and `once` allows).
@@ -183,5 +183,5 @@ mutations:
 - **Text variation & conditional prose** syntax in the body.
 - **Namespacing / includes** for large trees, and how a **grove** references its
   member trees.
-- Whether `qualities.toml` and `entities/` should be inlinable into `pwood.toml`
+- Whether `features.toml` and `entities/` should be inlinable into `pwood.toml`
   for the smallest sprigs.

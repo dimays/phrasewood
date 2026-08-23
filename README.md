@@ -1,6 +1,6 @@
 # Phrasewood
 
-**An engine for text games grown from buds and qualities.**
+**An engine for text games grown from buds and features.**
 
 Phrasewood is the open-source core beneath [phrasewood.com](https://phrasewood.com) —
 a platform and toolset for creating, sharing, and playing text-based games. This
@@ -22,9 +22,9 @@ The whole model is a handful of primitives:
 
 | Term        | What it is                                                              |
 | ----------- | ---------------------------------------------------------------------- |
-| **quality** | a typed variable that holds the world's state (inventory, skills, mood, progress) |
+| **feature** | a typed variable that holds part of the world's state (inventory, skills, mood, progress) |
 | **bud**     | a unit of story that *blooms* when the current state meets its requirements |
-| **entity**  | a thing, person, or place that carries its own qualities               |
+| **entity**  | a thing, person, or place that carries its own features                |
 | **tree**    | a single story                                                          |
 | **grove**   | a collection of stories                                                 |
 | **sprig**   | a tiny, constrained game — a cutting with just a few buds               |

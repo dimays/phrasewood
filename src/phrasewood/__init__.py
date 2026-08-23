@@ -1,7 +1,7 @@
-"""Phrasewood — an engine for text games grown from buds and qualities.
+"""Phrasewood — an engine for text games grown from buds and features.
 
 Phrasewood is the open-source core beneath the Phrasewood platform: a small
-vocabulary — *qualities* (the world's state), *buds* (moments that bloom when
+vocabulary — *features* (the world's state), *buds* (moments that bloom when
 that state allows), and *entities* (the things, people, and places state hangs
 on) — that composes into anything from a five-minute *sprig* to a sprawling
 *tree*.
