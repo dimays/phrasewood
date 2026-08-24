@@ -23,6 +23,13 @@ from phrasewood.core import (
     TextType,
     Tree,
 )
+from phrasewood.engine import (
+    MenuSelector,
+    PrioritySelector,
+    Selector,
+    Session,
+    View,
+)
 from phrasewood.errors import (
     DuplicateBud,
     DuplicateEntity,
@@ -65,6 +72,12 @@ __all__ = [
     # state
     "World",
     "WorldEnvironment",
+    # engine
+    "Session",
+    "View",
+    "Selector",
+    "PrioritySelector",
+    "MenuSelector",
     # expression & effect language
     "Environment",
     "parse_expression",

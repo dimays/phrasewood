@@ -89,6 +89,7 @@ class Bud:
 
     id: str
     content: str = ""
+    title: str = ""  # a short label, used when a bud is offered in a selection menu
     when: str | None = None
     once: bool = False
     tags: tuple[str, ...] = ()

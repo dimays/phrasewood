@@ -46,6 +46,8 @@ class World:
             self._entities[entity.id] = entity
             self._entity_stores[entity.id] = FeatureStore(entity.features)
 
+        self._bloomed: dict[str, int] = {}
+
     @classmethod
     def for_tree(cls, tree: Tree) -> World:
         """Spin up a fresh playthrough world from a tree's features and entities."""
@@ -117,6 +119,20 @@ class World:
             return self._entity_stores[entity_id]
         except KeyError:
             raise UnknownEntity(f"no entity named {entity_id!r}") from None
+
+    # -- bloom history -----------------------------------------------------
+
+    def mark_bloomed(self, bud_id: str) -> None:
+        """Record that a bud bloomed (incrementing its count)."""
+        self._bloomed[bud_id] = self._bloomed.get(bud_id, 0) + 1
+
+    def has_bloomed(self, bud_id: str) -> bool:
+        """Whether a bud has bloomed at least once this playthrough."""
+        return bud_id in self._bloomed
+
+    def bloom_count(self, bud_id: str) -> int:
+        """How many times a bud has bloomed this playthrough."""
+        return self._bloomed.get(bud_id, 0)
 
     # -- mapping-style sugar (over world features) -------------------------
 
