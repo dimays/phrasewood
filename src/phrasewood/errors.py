@@ -25,6 +25,14 @@ class DuplicateFeature(PhrasewoodError):
     """Two features were defined with the same name."""
 
 
+class UnknownEntity(PhrasewoodError):
+    """An entity was referenced by a name the world does not define."""
+
+
+class DuplicateEntity(PhrasewoodError):
+    """Two entities were defined with the same id."""
+
+
 class ExpressionError(PhrasewoodError):
     """A `when`/`do` string could not be tokenized or parsed (a syntax error)."""
 
@@ -38,6 +46,8 @@ __all__ = [
     "FeatureValueError",
     "UnknownFeature",
     "DuplicateFeature",
+    "UnknownEntity",
+    "DuplicateEntity",
     "ExpressionError",
     "EvaluationError",
 ]
