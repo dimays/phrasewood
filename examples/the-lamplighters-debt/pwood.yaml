@@ -1,0 +1,8 @@
+format: "0.1"
+id: the-lamplighters-debt
+title: The Lamplighter's Debt
+author: David Mays
+version: "0.1.0"
+created: "2026-08-24"
+blurb: The bridge is out, the rain is cold, and the ferryman knows your name.
+start: bridge
