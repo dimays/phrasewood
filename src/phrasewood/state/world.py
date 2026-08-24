@@ -12,12 +12,15 @@ world-level features. Entity state and bloom history join it in later commits.
 from __future__ import annotations
 
 from collections.abc import Iterable, Iterator, Mapping
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from phrasewood.core.entity import Entity
 from phrasewood.core.feature import Feature
 from phrasewood.errors import DuplicateEntity, UnknownEntity, UnknownFeature
 from phrasewood.state.store import FeatureStore
+
+if TYPE_CHECKING:
+    from phrasewood.core.tree import Tree
 
 
 class World:
@@ -42,6 +45,11 @@ class World:
                 raise DuplicateEntity(f"duplicate entity id {entity.id!r}")
             self._entities[entity.id] = entity
             self._entity_stores[entity.id] = FeatureStore(entity.features)
+
+    @classmethod
+    def for_tree(cls, tree: Tree) -> World:
+        """Spin up a fresh playthrough world from a tree's features and entities."""
+        return cls(tree.features, tree.entities)
 
     # -- world features ----------------------------------------------------
 

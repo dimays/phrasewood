@@ -7,6 +7,7 @@ a game lives in :mod:`phrasewood.state`.
 
 from __future__ import annotations
 
+from phrasewood.core.bud import Action, Bud, Choice
 from phrasewood.core.entity import Entity
 from phrasewood.core.feature import (
     BoolType,
@@ -16,6 +17,7 @@ from phrasewood.core.feature import (
     IntType,
     TextType,
 )
+from phrasewood.core.tree import Tree
 
 __all__ = [
     "Feature",
@@ -25,4 +27,8 @@ __all__ = [
     "TextType",
     "EnumType",
     "Entity",
+    "Bud",
+    "Choice",
+    "Action",
+    "Tree",
 ]

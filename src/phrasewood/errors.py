@@ -33,6 +33,14 @@ class DuplicateEntity(PhrasewoodError):
     """Two entities were defined with the same id."""
 
 
+class UnknownBud(PhrasewoodError):
+    """A bud was referenced (as a start or a goto) by an id no bud defines."""
+
+
+class DuplicateBud(PhrasewoodError):
+    """Two buds were defined with the same id."""
+
+
 class ExpressionError(PhrasewoodError):
     """A `when`/`do` string could not be tokenized or parsed (a syntax error)."""
 
@@ -48,6 +56,8 @@ __all__ = [
     "DuplicateFeature",
     "UnknownEntity",
     "DuplicateEntity",
+    "UnknownBud",
+    "DuplicateBud",
     "ExpressionError",
     "EvaluationError",
 ]
