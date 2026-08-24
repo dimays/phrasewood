@@ -14,7 +14,9 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Topic :: Games/Entertainment",
 ]
-dependencies = []
+dependencies = [
+    "pyyaml>=6",  # reading the .pwood on-disk format
+]
 
 [project.scripts]
 phrasewood = "phrasewood.cli:main"
