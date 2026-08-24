@@ -1,10 +1,10 @@
 # The `.pwood` format — draft v0
 
-> **Status: draft, provisional.** This sketches the on-disk shape of a Phrasewood
-> project and the model behind it. It exists to give Phase 1 (the engine) a
-> target to build toward; expect the details to shift as the engine model gets
-> real. The *shape* (a folder of text files, zipped to a `.pwood` file) is
-> locked; the field names and expression syntax below are not.
+> **Status: draft for Phase 2.** The engine model this describes is now implemented
+> (Phase 1); this spec is how that model will be represented on disk, and the
+> loader/serializer is Phase 2 work. The *shape* — a folder of text files, zipped to
+> a single `.pwood` — is locked; the TOML field names below may still shift as we
+> build the loader.
 
 ## What a project is
 
@@ -101,6 +101,7 @@ structured data; the **Markdown body** is the prose the player reads.
 ```markdown
 +++
 id = "ask-the-ferryman"
+title = "Ask him how"          # a short label, shown when this bud is offered in a menu
 when = "chapter == 1 and trust_in_ferryman < 3"
 once = false                   # if true, this bud can bloom at most once
 tags = ["conversation"]
@@ -131,6 +132,8 @@ since your father's time." Rain runs from the brim of his hood.
   optional `when` gates visibility; `do` applies effects; `goto` transitions.
 - **`action`** — a phrase-line verb. `aliases` widen what typed input matches;
   otherwise identical to a choice. (Choices and actions unify at runtime.)
+- **`goto`** blooms a bud directly, *bypassing its `when`*. A bud meant to be reached
+  only by a link carries `when = "false"` to stay out of open selection.
 - Prose body will support light templating and variation in a later draft
   (e.g. showing text conditionally, or picking one of several phrasings).
 
@@ -138,48 +141,39 @@ since your father's time." Rain runs from the brim of his hood.
 
 ## The expression & effect layer
 
-Deliberately small and **safe** — no arbitrary code, so the same content runs in
-the browser data runtime and the Python engine identically. This is the
-"ceiling-remover" referenced in [`../DECISIONS.md`](../DECISIONS.md).
+`when` and `do` are written in Phrasewood's small, safe expression language —
+integer arithmetic, boolean logic, comparisons, and `feature` / `entity.feature`
+references. It is specified in full (and identically for the browser runtime) in
+[`expression-language.md`](expression-language.md).
 
-**Expressions** (`when`) evaluate to a boolean:
+```
+when = "chapter == 1 and trust_in_ferryman < 3"
+do   = "has_lantern = false; trust_in_ferryman += 2; ferryman.mood = 'warm'"
+```
 
-- references: `feature_name`, `entity.feature`
-- comparisons: `== != < <= > >=`
-- logic: `and`, `or`, `not`
-- arithmetic: `+ - * /`
-- literals: integers, `true` / `false`, `'single-quoted strings'`
-- helpers (candidate): `bloomed('bud-id')`, `visits('bud-id')`
-
-**Effects** (`do`) are a `;`-separated (or newline-separated) sequence of
-mutations:
-
-- `feature = <expr>`
-- `feature += <n>` / `feature -= <n>`
-- `entity.feature = <expr>`
-
-`goto` is a field, not an effect — it names the transition after effects apply.
+`goto` is not part of the language — it is a field on a choice/action that names the
+next bud, applied after the effect runs.
 
 ---
 
 ## The runtime loop (informative)
 
-1. **Load** the project → a `World`: features at their defaults, entities built,
-   buds indexed.
-2. **Bloom** the `start` bud (or, in open/systemic play, compute the set of
-   eligible buds whose `when` holds and `once` allows).
-3. **Present** the current bud's prose plus its visible choices; accept a tapped
-   choice or a typed phrase mapped to an action.
-4. **Apply** the selected `do` effects, then follow `goto` if present, else
-   recompute eligible buds.
-5. **Repeat** until no bud is eligible or an explicit ending is reached.
+This is the shape the loader feeds; the engine that runs it is described in
+[`architecture.md`](architecture.md).
 
-## Open questions (for Phase 1 to answer)
+1. **Load** the project → a `Tree` (definitions) and a fresh `World` (state).
+2. **Bloom** the `start` bud, marking it bloomed.
+3. **Present** the current bud's prose plus its available choices/actions.
+4. **Take** an option: apply its `do` effects, then follow its `goto` if present —
+   otherwise ask the **selector** which eligible bud blooms next (or offer the player
+   a menu of them).
+5. **End** when no bud is eligible; a leaf bud with no successors ends on its prose.
 
-- **Selection policy when several buds are eligible.** Directed flow (`goto`)
-  covers authored sequences; open play needs a rule — priority, weighting,
-  player-chosen menu (Fallen London style), or salience. Likely support several.
-- **Endings.** An explicit `[[ending]]` construct, or simply "no eligible buds"?
+## Open questions (for Phase 2)
+
+- **Selection policy** — *resolved.* A pluggable `Selector` (player-menu default +
+  priority) decides among eligible buds; more policies, and per-tree/per-pool choice,
+  are the direction. See [`../DECISIONS.md`](../DECISIONS.md).
 - **Text variation & conditional prose** syntax in the body.
 - **Namespacing / includes** for large trees, and how a **grove** references its
   member trees.
