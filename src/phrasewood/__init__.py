@@ -20,11 +20,22 @@ from phrasewood.core import (
 )
 from phrasewood.errors import (
     DuplicateFeature,
+    EvaluationError,
+    ExpressionError,
     FeatureValueError,
     PhrasewoodError,
     UnknownFeature,
 )
-from phrasewood.state import World
+from phrasewood.expr import (
+    Environment,
+    eval_expression,
+    evaluate,
+    execute,
+    parse_effect,
+    parse_expression,
+    run_effect,
+)
+from phrasewood.state import World, WorldEnvironment
 
 __version__ = "0.0.1"
 
@@ -39,9 +50,20 @@ __all__ = [
     "EnumType",
     # state
     "World",
+    "WorldEnvironment",
+    # expression & effect language
+    "Environment",
+    "parse_expression",
+    "parse_effect",
+    "eval_expression",
+    "run_effect",
+    "evaluate",
+    "execute",
     # errors
     "PhrasewoodError",
     "FeatureValueError",
     "UnknownFeature",
     "DuplicateFeature",
+    "ExpressionError",
+    "EvaluationError",
 ]

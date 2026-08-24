@@ -6,6 +6,7 @@ changes as someone plays — starting with the :class:`World`.
 
 from __future__ import annotations
 
+from phrasewood.state.environment import WorldEnvironment
 from phrasewood.state.world import World
 
-__all__ = ["World"]
+__all__ = ["World", "WorldEnvironment"]

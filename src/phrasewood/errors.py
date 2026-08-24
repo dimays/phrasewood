@@ -25,9 +25,19 @@ class DuplicateFeature(PhrasewoodError):
     """Two features were defined with the same name."""
 
 
+class ExpressionError(PhrasewoodError):
+    """A `when`/`do` string could not be tokenized or parsed (a syntax error)."""
+
+
+class EvaluationError(PhrasewoodError):
+    """A parsed expression or effect failed while running (e.g. a type mismatch)."""
+
+
 __all__ = [
     "PhrasewoodError",
     "FeatureValueError",
     "UnknownFeature",
     "DuplicateFeature",
+    "ExpressionError",
+    "EvaluationError",
 ]
