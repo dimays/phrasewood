@@ -107,13 +107,71 @@ AI is a **muse and a bounded mechanic, never the author.** Build-time help
 (rehearsal, a continuity conscience, idea seeds) and the runtime phrase-line
 mapping are the sanctioned uses. No one-click game generation.
 
+## Definitions vs. state — **Locked**
+
+Everything the author writes is an immutable **definition** (`Feature`, `Entity`,
+`Bud`, and the whole `Tree`); everything that changes during play lives in a
+mutable **`World`**. One tree spins up many independent worlds (`World.for_tree`).
+
+*Why:* it keeps "what was written" cleanly apart from "what's happening," makes the
+model trivially testable, and maps exactly onto the browser data runtime — the same
+definitions, with a separate world per player.
+
+## Compile once, at construction — **Locked**
+
+A bud, choice, or action parses its `when` / `do` strings into cached AST the moment
+it is built. Syntax errors surface at authoring time, not mid-play, and the engine
+evaluates the compiled form. The source strings are kept, so a tree round-trips back
+to `.pwood` unchanged. (Convention: `when` / `do` are the source; `condition` /
+`effect` are their compiled forms.)
+
+## Explicit transitions vs. open selection — **Locked**
+
+A `goto` blooms a named bud **directly, bypassing its `when`** — it is an authored
+"go here now." A bud's `when` governs only its eligibility in *open selection* (when
+no `goto` applies and the engine must choose among eligible buds). A bud meant to be
+reached only by a link therefore carries `when = "false"` to stay out of open
+selection while remaining goto-able.
+
+## Selection is a pluggable policy — **Locked (interface); growing (policies)**
+
+When several buds are eligible and no `goto` decides, a **`Selector`** chooses what
+blooms — or defers to the player. Two ship today: **player-menu** (the default;
+offer the eligible buds) and **priority** (first in tree order; deterministic).
+Weighted-random, salience, and deck-based policies are designed-for but deferred —
+they need a seeded, specified PRNG for cross-runtime parity.
+
+*Direction:* the intent is to **hand authors the keys** — pick a policy per tree,
+and eventually per pool of buds (a main thread on priority, an ambient pool on
+random, a hub on menu). The `Selector` interface is the seam that keeps that
+additive. See Kreminski & Wardrip-Fruin for the map of this space.
+
+## Strict, specified expression semantics — **Locked**
+
+The `when` / `do` language is deliberately strict so the Python engine and the future
+TypeScript runtime agree exactly: integer-only arithmetic with floor division,
+integer-only ordered comparisons, equality that keeps a bool distinct from an int
+(`true == 1` is `false`), and short-circuiting boolean logic. It is safe by
+construction — only the constructs we implement exist, so there is no arbitrary code
+to sandbox. Full reference: [`docs/expression-language.md`](docs/expression-language.md).
+
+## Two pluggable seams — **Locked**
+
+The engine reaches state and sequencing only through small interfaces —
+**`Environment`** (how expressions read and write state) and **`Selector`** (which
+bud blooms). Concrete state, entities, and policies plug in without changing the
+evaluator or the loop. This is the pattern that lets the browser runtime and
+author-chosen policies drop in cleanly later. See
+[`docs/architecture.md`](docs/architecture.md).
+
 ## Format — **Locked (shape); draft (details)**
 
 Our own format, extension **`.pwood`**. A project is a folder of human-readable
 text files while you author (git-friendly, diffable), zipped into a single
-`.pwood` file to distribute (as `.docx` / `.epub` / `.love` do). The concrete
-schema is drafted in [`docs/pwood-format.md`](docs/pwood-format.md) and will be
-firmed up alongside the engine model (Phase 1) and its serializer (Phase 2).
+`.pwood` file to distribute (as `.docx` / `.epub` / `.love` do). The engine model is
+now implemented (Phase 1); the on-disk schema is drafted in
+[`docs/pwood-format.md`](docs/pwood-format.md) and its loader/serializer arrives in
+Phase 2.
 
 ---
 
@@ -121,9 +179,12 @@ firmed up alongside the engine model (Phase 1) and its serializer (Phase 2).
 
 Each phase is many small, gated commits, and each ends on something playable.
 
-0. **Foundations** — repo, scaffold, this doc, a first-draft format spec. *(this phase)*
-1. **Engine core** — features, buds, entities, an expression layer, and a terminal player. `pip install phrasewood`, fully tested.
-2. **The `.pwood` format** — serialize/deserialize the model to the folder form and back; author a reference game by hand.
+0. **Foundations** ✓ — repo, scaffold, this doc, the first-draft format spec.
+1. **Engine core** ✓ — features, buds, entities, the expression language, the bloom
+   loop (`Session` + pluggable `Selector`), and a terminal player. `pip install
+   phrasewood`, playable end to end, fully tested.
+2. **The `.pwood` format** — *(next)* serialize/deserialize the model to the folder
+   form and back; author a reference game as files and load it.
 3. **Play in the browser** — the TypeScript data runtime + a no-login web player; platform skeleton. *(separate repo)*
 4. **The Make studio** — the bud-centric visual builder, the computed map, a live playtest, and the first sprigs.
 5. **The commons** — accounts, publishing, discovery, follow, "surprise me," and Trust & Safety (see below).
