@@ -5,11 +5,12 @@
 Phrasewood is the open-source core beneath [phrasewood.com](https://phrasewood.com) —
 a platform and toolset for creating, sharing, and playing text-based games. This
 package is the engine those games run on: a small, composable vocabulary for
-building interactive stories that you can play in a terminal, embed in your own
-tools, or hack on directly.
+building interactive stories you can play in a terminal, embed in your own tools,
+or hack on directly.
 
-> **Status: pre-alpha.** The design is settled and the engine is being built in
-> the open, phase by phase. The public API will change until 1.0.
+> **Status: pre-alpha, and playable.** The engine works end to end — you can author
+> a story in Python and play it at a prompt today. The on-disk `.pwood` format and
+> the platform are still ahead, and the public API will change until 1.0.
 
 ## The idea
 
@@ -59,15 +60,62 @@ links; stories stay maintainable at scale and can become systemic, emergent, and
 deeply reactive. That scalability is the whole reason the model is worth adopting
 — and worth giving good, joyful tooling.
 
-## Install
+## Try it
 
-Requires Python 3.10+. While it's pre-release, install from source:
+Requires Python 3.10+ and [uv](https://docs.astral.sh/uv/).
 
 ```bash
 git clone https://github.com/dimays/phrasewood.git
 cd phrasewood
-uv sync
+uv run phrasewood        # play the bundled game, "The Lamplighter's Debt"
 ```
+
+Type a number to choose, or `q` to quit. The game is small on purpose — its ending
+is *chosen by the world* rather than hard-wired, which is the whole model in
+miniature.
+
+## Author a game
+
+A story is a `Tree` of buds. Requirements (`when`) and effects (`do`) are written
+in a tiny, safe expression language — see
+[`docs/expression-language.md`](docs/expression-language.md).
+
+```python
+from phrasewood import Tree, Bud, Choice, Feature, IntType, play
+
+tree = Tree(
+    id="small-wood",
+    title="A Small Wood",
+    features=(Feature("nerve", IntType(0, 3), default=0),),
+    buds=(
+        Bud(
+            "start",
+            once=True,
+            content="A dark path splits the wood.",
+            choices=(
+                Choice("Steady your nerve", do="nerve += 2", goto="fork"),
+                Choice("Hurry onward", goto="fork"),
+            ),
+        ),
+        Bud(
+            "fork",
+            once=True,
+            content="A narrow way drops into the dark.",
+            choices=(
+                Choice("Take the narrow way", when="nerve >= 2", goto="end"),
+                Choice("Keep to the safe path", goto="end"),
+            ),
+        ),
+        Bud("end", once=True, content="You reach the far side, changed by the wood."),
+    ),
+    start="start",
+)
+
+play(tree)  # play it in the terminal
+```
+
+Steady your nerve first and the narrow way opens; hurry, and it stays hidden. That
+conditional choice is computed from state, not authored twice.
 
 ## Develop
 
@@ -81,8 +129,11 @@ uv run ruff format   # format
 
 ## Where things are
 
-- [`DECISIONS.md`](DECISIONS.md) — the locked design vocabulary and architecture, with the reasoning behind each call.
-- [`docs/pwood-format.md`](docs/pwood-format.md) — a first draft of the `.pwood` on-disk project format.
+- [`DECISIONS.md`](DECISIONS.md) — the choices that shape Phrasewood, and why.
+- [`docs/architecture.md`](docs/architecture.md) — how the engine is put together.
+- [`docs/expression-language.md`](docs/expression-language.md) — the `when` / `do` language reference.
+- [`docs/pwood-format.md`](docs/pwood-format.md) — the draft `.pwood` on-disk format (arrives in Phase 2).
+- [`src/phrasewood/examples/`](src/phrasewood/examples/) — bundled games, authored in Python.
 
 ## License
 
