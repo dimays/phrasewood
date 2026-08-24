@@ -29,6 +29,7 @@ from phrasewood.engine import (
     Selector,
     Session,
     View,
+    play,
 )
 from phrasewood.errors import (
     DuplicateBud,
@@ -75,6 +76,7 @@ __all__ = [
     # engine
     "Session",
     "View",
+    "play",
     "Selector",
     "PrioritySelector",
     "MenuSelector",

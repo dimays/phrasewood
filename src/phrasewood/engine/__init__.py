@@ -6,12 +6,14 @@ blooms when several are eligible (the pluggable sequencing policy).
 
 from __future__ import annotations
 
+from phrasewood.engine.play import play
 from phrasewood.engine.selector import MenuSelector, PrioritySelector, Selector
 from phrasewood.engine.session import Session, View
 
 __all__ = [
     "Session",
     "View",
+    "play",
     "Selector",
     "PrioritySelector",
     "MenuSelector",

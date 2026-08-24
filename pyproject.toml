@@ -16,6 +16,9 @@ classifiers = [
 ]
 dependencies = []
 
+[project.scripts]
+phrasewood = "phrasewood.cli:main"
+
 [project.urls]
 Homepage = "https://phrasewood.com"
 Repository = "https://github.com/dimays/phrasewood"
