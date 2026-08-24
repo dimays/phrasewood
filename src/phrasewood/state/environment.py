@@ -28,5 +28,11 @@ class WorldEnvironment(Environment):
     def set(self, name: str, value: Value) -> None:
         self._world.set(name, value)
 
+    def get_attr(self, target: str, attr: str) -> Value:
+        return self._world.get_entity_feature(target, attr)
+
+    def set_attr(self, target: str, attr: str, value: Value) -> None:
+        self._world.set_entity_feature(target, attr, value)
+
 
 __all__ = ["WorldEnvironment"]

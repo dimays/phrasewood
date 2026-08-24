@@ -12,6 +12,7 @@ format lives in ``docs/pwood-format.md``.
 
 from phrasewood.core import (
     BoolType,
+    Entity,
     EnumType,
     Feature,
     FeatureType,
@@ -19,11 +20,13 @@ from phrasewood.core import (
     TextType,
 )
 from phrasewood.errors import (
+    DuplicateEntity,
     DuplicateFeature,
     EvaluationError,
     ExpressionError,
     FeatureValueError,
     PhrasewoodError,
+    UnknownEntity,
     UnknownFeature,
 )
 from phrasewood.expr import (
@@ -48,6 +51,7 @@ __all__ = [
     "BoolType",
     "TextType",
     "EnumType",
+    "Entity",
     # state
     "World",
     "WorldEnvironment",
@@ -64,6 +68,8 @@ __all__ = [
     "FeatureValueError",
     "UnknownFeature",
     "DuplicateFeature",
+    "UnknownEntity",
+    "DuplicateEntity",
     "ExpressionError",
     "EvaluationError",
 ]
