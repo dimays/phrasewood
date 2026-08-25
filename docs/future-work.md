@@ -4,17 +4,17 @@ Planned and proposed work, grouped by area. This is a living backlog, not a
 commitment — items move here when we decide to defer them, and move to
 [`past-work.md`](past-work.md) (stamped with a completion date) when they ship.
 
-## Phase 2 — the `.pwood` format
+## The `.pwood` format
 
-- [ ] **The serializer** — write a `Tree` back to `.pwood` files, with a full
-  `Tree → files → Tree` round-trip. (Needs a YAML writer; decide PyYAML `dump`
-  vs. `ruamel` if preserving author comments matters.)
 - [ ] **Cross-file feature-definition library** — a named, reusable feature
   definition referenceable from any entity or file (define `mood` once, use it
   anywhere, with overrides). In-file reuse already works via YAML anchors; this is
   the across-file version, deferred until a real multi-file world needs it.
 - [ ] **Ship a file-based example in the wheel** — so `.pwood` games can be played
   without a repo checkout (`importlib.resources`).
+- [ ] **Comment-preserving serialization** — the writer uses plain PyYAML (fine for
+  exporting machine-built trees). If re-writing *hand-authored* files becomes a
+  workflow, swap to `ruamel.yaml` to keep authors' comments and formatting.
 
 ## The expression language
 
