@@ -71,7 +71,9 @@ chapter:
   default: 1
 ```
 
-## `entities/*.yaml` — things, people, places
+## `entities/` — things, people, places
+
+An entity is a mapping with its own features:
 
 ```yaml
 id: ferryman
@@ -87,6 +89,42 @@ features:                      # entity-local state, same shapes as above
 ```
 
 Reference an entity's feature in expressions as `ferryman.mood`.
+
+### Organize entities however your project wants
+
+Like a data project's model files, entities can be split by whatever grouping
+suits the game's size. All of these load, and all are merged:
+
+- **one entity per file** — `entities/ferryman.yaml` (a single mapping)
+- **many in one file** — `entities/cast.yaml` (a **list** of entity mappings)
+- **inline in the manifest** — an `entities:` list right in `pwood.yaml`, for a
+  sprig small enough to live in one file
+
+Features work the same way: a `features.yaml` file and/or an inline `features:`
+mapping in `pwood.yaml`. (Buds stay one Markdown file each — their prose body is
+the point.)
+
+### Reusing a feature's shape
+
+When several entities share a feature — every character with a `mood`, say — use a
+YAML **anchor** to write the shape once and alias it. This needs the entities to
+share a file (or the manifest), and works with no special support from Phrasewood:
+
+```yaml
+# entities/cast.yaml
+- id: ferryman
+  features:
+    mood: &mood                # define the shape once, and anchor it
+      type: enum
+      values: [wary, warm, cold]
+      default: wary
+- id: innkeeper
+  features:
+    mood: *mood                # reuse it — same spec, no repetition
+```
+
+(A named library of feature definitions reusable *across* files is planned; see
+[`future-work.md`](future-work.md).)
 
 ## `buds/*.md` — the story
 
