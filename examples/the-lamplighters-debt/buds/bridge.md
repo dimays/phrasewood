@@ -3,6 +3,7 @@ id: bridge
 once: true
 choices:
   - label: Offer your lantern as payment
+    when: lantern.lit
     do: trust += 3; ferryman.mood = 'warm'
     goto: ferry
   - label: Ask how he knows your name

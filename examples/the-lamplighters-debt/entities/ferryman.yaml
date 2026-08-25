@@ -1,8 +1,0 @@
-id: ferryman
-kind: character
-name: the ferryman
-features:
-  mood:
-    type: enum
-    values: [wary, warm]
-    default: wary

@@ -132,8 +132,11 @@ uv run ruff format   # format
 - [`DECISIONS.md`](DECISIONS.md) — the choices that shape Phrasewood, and why.
 - [`docs/architecture.md`](docs/architecture.md) — how the engine is put together.
 - [`docs/expression-language.md`](docs/expression-language.md) — the `when` / `do` language reference.
-- [`docs/pwood-format.md`](docs/pwood-format.md) — the draft `.pwood` on-disk format (arrives in Phase 2).
+- [`docs/pwood-format.md`](docs/pwood-format.md) — the `.pwood` on-disk format.
+- [`docs/future-work.md`](docs/future-work.md) — the backlog of planned and proposed work.
+- [`docs/past-work.md`](docs/past-work.md) — what's shipped, with dates.
 - [`src/phrasewood/examples/`](src/phrasewood/examples/) — bundled games, authored in Python.
+- [`examples/the-lamplighters-debt/`](examples/the-lamplighters-debt/) — the same game as a `.pwood` project.
 
 ## License
 
