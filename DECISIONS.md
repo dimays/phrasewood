@@ -173,6 +173,19 @@ now implemented (Phase 1); the on-disk schema is drafted in
 [`docs/pwood-format.md`](docs/pwood-format.md) and its loader/serializer arrives in
 Phase 2.
 
+The files are **YAML** (manifest, features, entities), with **buds as Markdown +
+YAML frontmatter** — chosen for comfortable hand-editing, comments, natural
+multi-line prose, and parseability in both runtimes. This ends the zero-dependency
+run (YAML is stdlib in neither Python nor JS); `PyYAML` is the one runtime dep, and
+we stay on Python 3.10.
+
+*The one sharp edge, and the rule that dulls it:* YAML *infers* scalar types, and
+parsers disagree at the edges (the "Norway problem" — `no`/`on`/`yes` may become
+booleans; PyYAML follows YAML 1.1, js-yaml 1.2). So the loader **`safe_load`s and
+then coerces every value to its schema type**, never trusting YAML's inference.
+That keeps the Python and browser runtimes identical *and* is the safety rule for
+loading untrusted games (`safe_load` only — never `yaml.load`).
+
 ---
 
 ## Roadmap

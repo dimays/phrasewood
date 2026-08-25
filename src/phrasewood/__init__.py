@@ -52,6 +52,7 @@ from phrasewood.expr import (
     parse_expression,
     run_effect,
 )
+from phrasewood.pwood import load
 from phrasewood.state import World, WorldEnvironment
 
 __version__ = "0.0.1"
@@ -73,6 +74,8 @@ __all__ = [
     # state
     "World",
     "WorldEnvironment",
+    # format
+    "load",
     # engine
     "Session",
     "View",

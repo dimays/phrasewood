@@ -41,6 +41,10 @@ class DuplicateBud(PhrasewoodError):
     """Two buds were defined with the same id."""
 
 
+class LoadError(PhrasewoodError):
+    """A `.pwood` project could not be read (missing, malformed, or invalid files)."""
+
+
 class ExpressionError(PhrasewoodError):
     """A `when`/`do` string could not be tokenized or parsed (a syntax error)."""
 
@@ -58,6 +62,7 @@ __all__ = [
     "DuplicateEntity",
     "UnknownBud",
     "DuplicateBud",
+    "LoadError",
     "ExpressionError",
     "EvaluationError",
 ]

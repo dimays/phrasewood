@@ -1,0 +1,7 @@
+# The world's state. Here, just how far the ferryman has come to trust you.
+trust:
+  type: int
+  default: 0
+  min: 0
+  max: 10
+  help: How far the ferryman trusts you.
