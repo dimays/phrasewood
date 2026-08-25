@@ -6,6 +6,7 @@ writer lands in a later commit.
 
 from __future__ import annotations
 
+from phrasewood.pwood.dump import save
 from phrasewood.pwood.load import load
 
-__all__ = ["load"]
+__all__ = ["load", "save"]
