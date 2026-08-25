@@ -40,7 +40,13 @@ commitment — items move here when we decide to defer them, and move to
 
 ## Platform (later phases)
 
-- [ ] **Phase 3** — the TypeScript data runtime + a no-login web player (separate repo).
+- [ ] **Phase 3** — *(next)* server-side Django play (the Python engine, stateless
+  replay), no login; a new platform repo.
+- [ ] **TypeScript client runtime** — deferred (was the original Phase 3 plan).
+  Build only if offline / static / embeddable / zero-latency play becomes a real
+  need. When we do, a Python-generated **conformance suite** (`.pwood` + input
+  script + expected output) keeps it in lockstep with this engine, and it must
+  honor the seeded-PRNG rule so randomness matches.
 - [ ] **Phase 4** — the Make studio (bud-centric visual builder, computed map, live playtest).
 - [ ] **Phase 5** — the commons (accounts, publishing, discovery) + Trust & Safety.
 - [ ] **Phase 6** — the Coauthor & the forgiving phrase line (opt-in, paid).
