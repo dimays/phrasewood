@@ -67,19 +67,38 @@ local/terminal play, developer experimentation, and open contribution. You *can*
 hand-author a game against it, but the platform's supported build doors are the
 visual studio and the Coauthor — not writing Python.
 
-## Runtime & safety — **Locked**
+## Runtime & safety — **Locked (revised 2026-08-24)**
 
-Two runtimes, one format:
+The platform plays games **server-side with this Python engine** — one codebase.
+A playthrough's state is just the choices made so far (plus a random seed; see
+below), carried in a token in the page, so the server is **stateless**: it replays
+the choices each turn to render the current view. This reuses the engine directly
+and scales cheaply for read-paced text play.
 
-- A **data runtime** interprets the `.pwood` format and is the one the platform
-  ships to browsers (planned in TypeScript). It runs no untrusted code.
-- This **Python engine** runs games on a developer's own machine.
+*Safety holds trivially.* Published games are pure **data** (`.pwood`), never
+author code, so our own trusted engine reads trusted data — there is no untrusted
+code to sandbox, on server or client. (The earlier worry was untrusted *Python* in
+a browser — Pyodide/WASM escapes, DEF CON 34, CVE-2026-5752 — which simply doesn't
+exist once games are data. That's also why the server-sandbox tier was dropped.)
 
-*Why:* running untrusted Python in a visitor's browser is not safe today
-(Pyodide/WASM sandbox escapes — DEF CON 34, CVE-2026-5752). Because custom code
-is not a build mode, published games are pure data played by the safe runtime,
-and Python only ever runs on its author's own hardware. This also removes any
-need for server-side sandboxing at 1.0.
+*Superseded.* We previously planned a TypeScript **data runtime** to play games
+client-side. That is now **deferred future work**, to be built only if offline /
+static / embeddable / zero-latency play becomes a real need — at which point a
+Python-generated **conformance suite** keeps it in lockstep with this engine. The
+client-side motivation was never safety (games are data); it was those
+nice-to-haves, not anything 1.0 requires.
+
+## Randomness must be seeded — **Locked**
+
+All engine randomness — a random selector, a dice function in a `do`, a
+probabilistic challenge — must flow through a **single seeded, specified PRNG**
+whose seed is part of the play state, never an ambient `random()`. One rule, three
+payoffs: **replay determinism** (stateless server-side play reproduces the same
+random outcomes), **cross-runtime parity** (a future TS runtime draws identically
+from the same seed), and **stable display** (re-rendering a turn doesn't reshuffle).
+The engine has no randomness yet; this rule governs the first feature that adds it,
+and the PRNG algorithm must be specified (not language-default) so both runtimes
+match.
 
 ## The phrase line & its cost model — **Locked**
 
@@ -198,7 +217,7 @@ Each phase is many small, gated commits, and each ends on something playable.
    phrasewood`, playable end to end, fully tested.
 2. **The `.pwood` format** — *(next)* serialize/deserialize the model to the folder
    form and back; author a reference game as files and load it.
-3. **Play in the browser** — the TypeScript data runtime + a no-login web player; platform skeleton. *(separate repo)*
+3. **Play in the browser** — *(next)* server-side Django play (the Python engine, stateless replay), no login; a new platform repo. (The client-side TS runtime is deferred — see Runtime & safety.)
 4. **The Make studio** — the bud-centric visual builder, the computed map, a live playtest, and the first sprigs.
 5. **The commons** — accounts, publishing, discovery, follow, "surprise me," and Trust & Safety (see below).
 6. **The Coauthor & the phrase line** — the opt-in, paid AI layer and forgiving typed input. Ships *with* 1.0.
