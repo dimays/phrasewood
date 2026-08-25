@@ -9,7 +9,7 @@ needed; the sequencing does it.
 
 from __future__ import annotations
 
-from phrasewood.core import Bud, Choice, Entity, EnumType, Feature, IntType, Tree
+from phrasewood.core import BoolType, Bud, Choice, Entity, EnumType, Feature, IntType, Tree
 
 
 def tree() -> Tree:
@@ -29,6 +29,12 @@ def tree() -> Tree:
                 name="the ferryman",
                 features=(Feature("mood", EnumType(("wary", "warm")), default="wary"),),
             ),
+            Entity(
+                "lantern",
+                kind="thing",
+                name="your lantern",
+                features=(Feature("lit", BoolType(), default=True),),
+            ),
         ),
         buds=(
             Bud(
@@ -42,6 +48,7 @@ def tree() -> Tree:
                 choices=(
                     Choice(
                         "Offer your lantern as payment",
+                        when="lantern.lit",
                         do="trust += 3; ferryman.mood = 'warm'",
                         goto="ferry",
                     ),

@@ -110,19 +110,8 @@ def _build_tree(source: _Source) -> Tree:
     if "id" not in manifest:
         raise LoadError("pwood.yaml: missing 'id'")
 
-    features = ()
-    features_text = source.read("features.yaml")
-    if features_text is not None:
-        fmap = schema.as_map(_yaml(features_text, "features.yaml") or {}, "features.yaml")
-        features = tuple(schema.build_feature(n, s, "features.yaml") for n, s in fmap.items())
-
-    entities = []
-    for name in source.list("entities"):
-        if not name.endswith((".yaml", ".yml")):
-            continue
-        where = f"entities/{name}"
-        data = _yaml(source.read(where) or "", where)
-        entities.append(schema.build_entity(data, where))
+    features = _collect_features(source, manifest)
+    entities = _collect_entities(source, manifest)
 
     buds = []
     for name in source.list("buds"):
@@ -148,6 +137,54 @@ def _build_tree(source: _Source) -> Tree:
         )
     except PhrasewoodError as exc:
         raise LoadError(f"{source.label}: {exc}") from exc
+
+
+def _each(data: Any, where: str) -> list[Any]:
+    """A definition source may be one mapping, or a list of them. Normalize to a list."""
+    if data is None:
+        return []
+    if isinstance(data, list):
+        return data
+    if isinstance(data, dict):
+        return [data]
+    raise LoadError(f"{where}: expected a mapping or a list")
+
+
+def _collect_features(source: _Source, manifest: dict[str, Any]) -> tuple[Any, ...]:
+    """Features from an inline manifest `features:` and/or a `features.yaml` file."""
+    specs: list[tuple[str, Any, str]] = []
+    if manifest.get("features"):
+        inline = schema.as_map(manifest["features"], "pwood.yaml.features")
+        specs += [(name, spec, "pwood.yaml.features") for name, spec in inline.items()]
+    text = source.read("features.yaml")
+    if text is not None:
+        fmap = schema.as_map(_yaml(text, "features.yaml") or {}, "features.yaml")
+        specs += [(name, spec, "features.yaml") for name, spec in fmap.items()]
+    return tuple(schema.build_feature(name, spec, where) for name, spec, where in specs)
+
+
+def _collect_entities(source: _Source, manifest: dict[str, Any]) -> list[Any]:
+    """Entities from an inline manifest `entities:` and/or files under `entities/`.
+
+    Each source may hold a single entity (a mapping) or several (a list).
+    """
+    entities = []
+    if "entities" in manifest:
+        inline = manifest["entities"]
+        for i, data in enumerate(_each(inline, "pwood.yaml.entities")):
+            where = (
+                f"pwood.yaml.entities[{i}]" if isinstance(inline, list) else "pwood.yaml.entities"
+            )
+            entities.append(schema.build_entity(data, where))
+    for name in source.list("entities"):
+        if not name.endswith((".yaml", ".yml")):
+            continue
+        base = f"entities/{name}"
+        parsed = _yaml(source.read(base) or "", base)
+        for i, data in enumerate(_each(parsed, base)):
+            where = f"{base}[{i}]" if isinstance(parsed, list) else base
+            entities.append(schema.build_entity(data, where))
+    return entities
 
 
 __all__ = ["load"]

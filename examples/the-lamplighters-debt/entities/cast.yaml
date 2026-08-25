@@ -1,0 +1,18 @@
+# Two entities in one file, written as a list — the ferryman who rows you across,
+# and the lantern you carry. (A single entity per file works too; see the docs.)
+- id: ferryman
+  kind: character
+  name: the ferryman
+  features:
+    mood:
+      type: enum
+      values: [wary, warm]
+      default: wary
+
+- id: lantern
+  kind: thing
+  name: your lantern
+  features:
+    lit:
+      type: bool
+      default: true

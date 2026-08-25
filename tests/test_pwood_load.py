@@ -34,8 +34,10 @@ class TestLoadReferenceGame:
         assert tree.title == "The Lamplighter's Debt"
         assert tree.start == "bridge"
         assert [f.name for f in tree.features] == ["trust"]
-        assert tree.entities[0].id == "ferryman"
+        # two entities, loaded from one list-form file (entities/cast.yaml)
+        assert [e.id for e in tree.entities] == ["ferryman", "lantern"]
         assert tree.entities[0].features[0].default == "wary"
+        assert tree.entities[1].kind == "thing"
         assert {b.id for b in tree.buds} == {"bridge", "ferry", "debt", "shore-warm", "shore-cold"}
 
     def test_bud_details_survive_loading(self) -> None:
@@ -57,6 +59,53 @@ class TestLoadReferenceGame:
         session = play(load(REFERENCE), read=scripted(["2", "1"]), write=out.append)
         assert session.is_over()
         assert "never knew" in "\n".join(out)
+
+
+class TestFlexibleStructures:
+    def test_single_entity_file(self, tmp_path: Path) -> None:
+        write_project(
+            tmp_path,
+            {"pwood.yaml": "id: t\n", "entities/solo.yaml": "id: solo\nkind: place\n"},
+        )
+        tree = load(tmp_path)
+        assert [e.id for e in tree.entities] == ["solo"]
+        assert tree.entities[0].kind == "place"
+
+    def test_list_of_entities_in_one_file(self, tmp_path: Path) -> None:
+        write_project(
+            tmp_path,
+            {"pwood.yaml": "id: t\n", "entities/cast.yaml": "- id: a\n- id: b\n"},
+        )
+        assert [e.id for e in load(tmp_path).entities] == ["a", "b"]
+
+    def test_entities_inline_in_manifest(self, tmp_path: Path) -> None:
+        write_project(tmp_path, {"pwood.yaml": "id: t\nentities:\n  - id: a\n  - id: b\n"})
+        assert [e.id for e in load(tmp_path).entities] == ["a", "b"]
+
+    def test_features_inline_in_manifest(self, tmp_path: Path) -> None:
+        write_project(
+            tmp_path, {"pwood.yaml": "id: t\nfeatures:\n  hp:\n    type: int\n    default: 5\n"}
+        )
+        tree = load(tmp_path)
+        assert [f.name for f in tree.features] == ["hp"]
+        assert tree.features[0].default == 5
+
+    def test_yaml_anchor_reuses_a_feature_shape(self, tmp_path: Path) -> None:
+        cast = (
+            "- id: c1\n"
+            "  features:\n"
+            "    mood: &m\n"
+            "      type: enum\n"
+            "      values: [wary, warm]\n"
+            "      default: wary\n"
+            "- id: c2\n"
+            "  features:\n"
+            "    mood: *m\n"
+        )
+        write_project(tmp_path, {"pwood.yaml": "id: t\n", "entities/cast.yaml": cast})
+        tree = load(tmp_path)
+        assert tree.entities[0].features[0].default == "wary"
+        assert tree.entities[1].features[0].default == "wary"  # the aliased shape
 
 
 class TestLoadFromZip:
